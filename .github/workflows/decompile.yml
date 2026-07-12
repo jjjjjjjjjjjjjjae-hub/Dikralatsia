@@ -32,10 +32,10 @@ jobs:
           sudo chmod +x jadx/bin/jadx
 
       - name: Decompile with Apktool
-        run: apktool d app.apk -o decompiled_apktool
+        run: apktool d app.apk -o decompiled_apktool || true
 
       - name: Decompile with Jadx
-        run: ./jadx/bin/jadx -d decompiled_jadx app.apk
+        run: ./jadx/bin/jadx -d decompiled_jadx app.apk || true
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
