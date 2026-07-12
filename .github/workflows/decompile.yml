@@ -1,0 +1,46 @@
+name: Decompile APK File
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  decompile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Apktool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apktool
+
+      - name: Install Jadx
+        run: |
+          wget https://github.com/skylot/jadx/releases/download/v1.4.7/jadx-1.4.7.zip
+          unzip jadx-1.4.7.zip -d jadx
+          sudo chmod +x jadx/bin/jadx
+
+      - name: Decompile with Apktool
+        run: apktool d app.apk -o decompiled_apktool
+
+      - name: Decompile with Jadx
+        run: ./jadx/bin/jadx -d decompiled_jadx app.apk
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Decompiled-Source-Files
+          path: |
+            decompiled_apktool/
+            decompiled_jadx/
