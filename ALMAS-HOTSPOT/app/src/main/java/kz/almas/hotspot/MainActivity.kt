@@ -8,6 +8,8 @@ import android.graphics.drawable.GradientDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.content.Context
+import android.content.Intent
+import android.provider.Settings
 import android.view.Gravity
 import android.widget.*
 import java.io.BufferedReader
@@ -82,6 +84,14 @@ class MainActivity : Activity() {
             setOnClickListener { refreshStatus() }
         }
         layout.addView(refresh, LinearLayout.LayoutParams(-1, -2))
+        val hotspotSettings = Button(this).apply {
+            text = "ХОТСПОТ БАПТАУЛАРЫН АШУ"
+            setOnClickListener {
+                try { startActivity(Intent("android.settings.TETHER_SETTINGS")) }
+                catch (_: Exception) { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) }
+            }
+        }
+        layout.addView(hotspotSettings, LinearLayout.LayoutParams(-1, -2))
         add(layout, card("Қауіпсіздік: бұл нұсқа жүйелік желі баптауларын өзгертпейді.", cyan))
         setContentView(scroll)
         refreshStatus()
@@ -90,6 +100,6 @@ class MainActivity : Activity() {
     private fun refreshStatus() {
         network.text = "ЖЕЛІ: ${connection()}"
         root.text = if (hasRoot()) "ROOT: ҚОСЫЛҒАН ✓" else "ROOT: қолжетімсіз"
-        status.text = "HOTSPOT: басқару келесі нұсқада"
+        status.text = "HOTSPOT: баптауларды ашу батырмасы дайын"
     }
 }
